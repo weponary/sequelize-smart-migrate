@@ -1,0 +1,31 @@
+{
+  "name": "sequelize-smart-migrate",
+  "version": "0.0.1",
+  "description": "Smart migration generator for Sequelize",
+  "keywords": [
+    "sequelize",
+    "migration",
+    "cli"
+  ],
+  "homepage": "https://github.com/weponary/sequelize-smart-migrate#readme",
+  "bugs": {
+    "url": "https://github.com/weponary/sequelize-smart-migrate/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weponary/sequelize-smart-migrate.git"
+  },
+  "license": "MIT",
+  "author": "weponary",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.2"
+  }
+}
