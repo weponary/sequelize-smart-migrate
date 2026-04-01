@@ -1,10 +1,14 @@
 {
   "name": "sequelize-smart-migrate",
   "version": "0.0.1",
-  "description": "Smart migration generator for Sequelize",
+  "description": "Template-driven Sequelize migration generator CLI",
   "keywords": [
     "sequelize",
+    "sequelize-cli",
     "migration",
+    "generator",
+    "skeleton",
+    "orm",
     "cli"
   ],
   "homepage": "https://github.com/weponary/sequelize-smart-migrate#readme",
@@ -16,11 +20,39 @@
     "url": "git+https://github.com/weponary/sequelize-smart-migrate.git"
   },
   "license": "MIT",
-  "author": "weponary",
+  "author": {
+    "name": "weponary",
+    "url": "https://github.com/weponary"
+  },
+  "bin": {
+    "smart-migrate": "dist/cli.js"
+  },
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup && chmod +x dist/cli.js",
+    "prepare": "npm run build",
+    "dev": "ts-node src/index.ts"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
