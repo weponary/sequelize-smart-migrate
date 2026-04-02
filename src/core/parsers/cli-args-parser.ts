@@ -1,4 +1,4 @@
-import { ICliArgsParser } from "../common/contracts";
+import { type ICliArgsParser } from "../common/contracts";
 
 export type ParsedCliArgs = {
   migrationPath?: string;
@@ -39,8 +39,6 @@ export class CliArgsParser implements ICliArgsParser {
       migrationArgs.push(arg);
     }
 
-    return migrationPath === undefined
-      ? { migrationArgs }
-      : { migrationPath, migrationArgs };
+    return migrationPath === undefined ? { migrationArgs } : { migrationPath, migrationArgs };
   }
 }

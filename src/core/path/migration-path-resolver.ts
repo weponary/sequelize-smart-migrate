@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { IMigrationPathResolver } from "../common/contracts";
+import { type IMigrationPathResolver } from "../common/contracts";
 
 type SequelizeRc = {
   "migrations-path"?: string;
