@@ -1,5 +1,5 @@
-import { ParsedCliArgs } from "../parsers/cli-args-parser";
-import { ParsedCommand } from "./parsed-command";
+import { type ParsedCliArgs } from "../parsers/cli-args-parser";
+import { type ParsedCommand } from "./parsed-command";
 
 export interface ICliArgsParser {
   parse(args: readonly string[]): ParsedCliArgs;

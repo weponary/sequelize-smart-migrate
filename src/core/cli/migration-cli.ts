@@ -1,10 +1,10 @@
 import fs from "fs";
 import path from "path";
 import {
-  ICliArgsParser,
-  ICommandParser,
-  IMigrationGenerator,
-  IMigrationPathResolver,
+  type ICliArgsParser,
+  type ICommandParser,
+  type IMigrationGenerator,
+  type IMigrationPathResolver,
 } from "../common/contracts";
 
 export class MigrationCli {
