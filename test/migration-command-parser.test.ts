@@ -18,10 +18,7 @@ describe("MigrationCommandParser", () => {
   it("parses create-table migration with field and relation columns", () => {
     const parser = new MigrationCommandParser();
 
-    const result = parser.parse("create-table-orders", [
-      "id:uuid",
-      "clientId:ref:clients:id:uuid",
-    ]);
+    const result = parser.parse("create-table-orders", ["id:uuid", "clientId:ref:clients:id:uuid"]);
 
     expect(result).toEqual({
       type: "createTable",
