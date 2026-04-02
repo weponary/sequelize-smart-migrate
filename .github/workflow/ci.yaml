@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 24.11.1
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+  # ── Verify the built CLI works on all supported Node versions ─────────────────
