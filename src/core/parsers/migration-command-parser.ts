@@ -1,5 +1,5 @@
-import { ICommandParser } from "../common/contracts";
-import { CreateTableColumn, ParsedCommand } from "../common/parsed-command";
+import { type ICommandParser } from "../common/contracts";
+import { type CreateTableColumn, type ParsedCommand } from "../common/parsed-command";
 
 export class MigrationCommandParser implements ICommandParser {
   private splitNameAndType(arg: string): { name: string; rawType: string } {
@@ -16,10 +16,7 @@ export class MigrationCommandParser implements ICommandParser {
     };
   }
 
-  private parseRefSyntax(
-    columnName: string,
-    rawType: string,
-  ): CreateTableColumn | null {
+  private parseRefSyntax(columnName: string, rawType: string): CreateTableColumn | null {
     if (!rawType.startsWith("ref")) {
       return null;
     }
@@ -56,9 +53,7 @@ export class MigrationCommandParser implements ICommandParser {
     return `${table}_${column}_idx`;
   }
 
-  private parseCreateTableColumns(
-    args: readonly string[],
-  ): CreateTableColumn[] {
+  private parseCreateTableColumns(args: readonly string[]): CreateTableColumn[] {
     const columns: CreateTableColumn[] = [];
 
     for (const arg of args) {
