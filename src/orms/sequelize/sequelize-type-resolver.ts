@@ -1,4 +1,4 @@
-import { IDataTypeResolver } from "../../core/common/contracts";
+import { type IDataTypeResolver } from "../../core/common/contracts";
 
 const VALID_TYPES = [
   "string",

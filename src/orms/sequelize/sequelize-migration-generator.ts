@@ -1,8 +1,5 @@
-import {
-  IMigrationGenerator,
-  IDataTypeResolver,
-} from "../../core/common/contracts";
-import { ParsedCommand } from "../../core/common/parsed-command";
+import { type IMigrationGenerator, type IDataTypeResolver } from "../../core/common/contracts";
+import { type ParsedCommand } from "../../core/common/parsed-command";
 import { ADD_MIGRATION_TEMPLATE } from "./migrations/add.template";
 import { ADD_INDEX_MIGRATION_TEMPLATE } from "./migrations/add-index.template";
 import { CHANGE_COLUMN_MIGRATION_TEMPLATE } from "./migrations/change-column.template";
@@ -106,10 +103,7 @@ export class SequelizeMigrationGenerator implements IMigrationGenerator {
     return lines.join("\n");
   }
 
-  private render(
-    template: string,
-    replacements: Record<string, string>,
-  ): string {
+  private render(template: string, replacements: Record<string, string>): string {
     return Object.entries(replacements).reduce((out, [key, value]) => {
       return out.split(`{{${key}}}`).join(value);
     }, template);
