@@ -7,15 +7,65 @@ on:
     branches: [main, develop]
 
 jobs:
-  test:
-    name: Unit Tests
+  lint-prettier:
+    name: Lint & Prettier
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 24.11.1
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format
+  build:
+    name: Build
+    needs: lint-prettier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.11.1
+          cache: npm
       - run: npm ci
       - run: npm run build
+      - run: npx es-check es2020 --allow-hash-bang --module 'dist/**/*.js' 'dist/**/*.mjs'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+  test:
+    name: Unit Tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.11.1
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
       - run: npm test
-  # ── Verify the built CLI works on all supported Node versions ─────────────────
+  compatibility:
+    name: Node ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    needs: test
+    strategy:
+      matrix:
+        node-version: [18, 20, 22, 24]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: node dist/cli.js --help # proves the process starts + all imports resolve
