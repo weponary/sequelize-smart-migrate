@@ -63,7 +63,7 @@ describe("MigrationCli", () => {
 
     expect(() => migrationCli.run(["node", "cli.js"])).toThrow("process.exit");
     expect(consoleErrorMock).toHaveBeenCalledWith(
-      "Usage: smart-migrate create <migration-name> [type]",
+      "Usage: smart-migrate create <migration-name> [args...]",
     );
     expect(exitMock).toHaveBeenCalledWith(1);
   });
@@ -85,9 +85,35 @@ describe("MigrationCli", () => {
       "process.exit",
     );
     expect(consoleErrorMock).toHaveBeenCalledWith(
-      "Usage: smart-migrate create <migration-name> [type]",
+      "Usage: smart-migrate create <migration-name> [args...]",
     );
     expect(exitMock).toHaveBeenCalledWith(1);
+  });
+
+  it("prints usage and returns when help flag is passed", () => {
+    const deps = createMockedDeps();
+    const migrationCli = new MigrationCli(
+      deps.argsParser,
+      deps.commandParser,
+      deps.generator,
+      deps.pathResolver,
+    );
+    const exitMock = vi.spyOn(process, "exit").mockImplementation(() => {
+      throw new Error("process.exit");
+    });
+    const consoleLogMock = vi.spyOn(console, "log").mockImplementation(() => {});
+    const consoleErrorMock = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    expect(() => migrationCli.run(["node", "cli.js", "--help"])).not.toThrow();
+    expect(consoleLogMock).toHaveBeenCalledOnce();
+    const helpText = consoleLogMock.mock.calls[0]?.[0] as string;
+    expect(helpText).toContain("Usage: smart-migrate create <migration-name> [args...]");
+    expect(helpText).toContain("Supported migration-name patterns:");
+    expect(helpText).toContain("Flags:");
+    expect(helpText).toContain("--migration-path <path>");
+    expect(helpText).toContain("-h, --help");
+    expect(consoleErrorMock).not.toHaveBeenCalled();
+    expect(exitMock).not.toHaveBeenCalled();
   });
 
   it("creates migration file and logs relative path on success", () => {

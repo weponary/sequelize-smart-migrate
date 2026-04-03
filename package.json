@@ -58,7 +58,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage && grep 'All files' | echo`awk '{print $4}'`",
+    "test:coverage": "vitest run --coverage",
     "build": "tsup && chmod +x dist/cli.js",
     "prepare": "npm run build && husky",
     "dev": "ts-node src/index.ts",
