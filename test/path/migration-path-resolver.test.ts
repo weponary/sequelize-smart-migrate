@@ -55,7 +55,10 @@ describe("MigrationPathResolver", () => {
     const cwd = makeTempDir();
     const rcPath = path.join(cwd, ".sequelizerc");
 
-    fs.writeFileSync(rcPath, 'module.exports = { default: { paths: { migrations: "db/default-migrations" } } };\n');
+    fs.writeFileSync(
+      rcPath,
+      'module.exports = { default: { paths: { migrations: "db/default-migrations" } } };\n',
+    );
 
     expect(resolver.resolve(cwd)).toBe(path.resolve(cwd, "db/default-migrations"));
   });
@@ -65,7 +68,10 @@ describe("MigrationPathResolver", () => {
     const cwd = makeTempDir();
     const rcPath = path.join(cwd, ".sequelizerc");
 
-    fs.writeFileSync(rcPath, 'module.exports = { default: "nope", "migrations-path": "db/from-root" };\n');
+    fs.writeFileSync(
+      rcPath,
+      'module.exports = { default: "nope", "migrations-path": "db/from-root" };\n',
+    );
 
     expect(resolver.resolve(cwd)).toBe(path.resolve(cwd, "db/from-root"));
   });
