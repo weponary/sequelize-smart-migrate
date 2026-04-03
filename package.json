@@ -58,6 +58,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage && grep 'All files' | echo`awk '{print $4}'`",
     "build": "tsup && chmod +x dist/cli.js",
     "prepare": "npm run build && husky",
     "dev": "ts-node src/index.ts",
@@ -69,6 +70,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.5.0",
+    "@vitest/coverage-v8": "^4.1.2",
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
