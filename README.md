@@ -545,3 +545,5 @@ All these migrations are generated automatically — no boilerplate writing!
 **Q: I need to add allowNull: true manually**
 
 - Edit the generated migration file directly, or use `add` command (which includes `allowNull: true` by default)
+
+##
