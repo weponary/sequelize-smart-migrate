@@ -22,6 +22,8 @@ jobs:
   compatibility:
     name: Compatibility Tests
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: production
     strategy:
       matrix:
         node-version: [18, 20, 22, 24]
@@ -30,6 +32,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - run: npm ci --omit=dev
       - run: npm run build
       - run: node dist/cli.js --help
