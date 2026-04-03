@@ -7,31 +7,96 @@ on:
     branches: [main, develop]
 
 jobs:
-  test:
-    name: Unit Tests
+  # ── 1. Lint & Format ──────────────────────────────────────────────────────────
+  lint:
+    name: Lint & Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24.11.1
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format
+
+  # ── 2. Build ──────────────────────────────────────────────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
       - run: npm ci
       - run: npm run build
-      - run: npm test
-  # ── Verify the built CLI works on all supported Node versions ─────────────────
-  compatibility:
-    name: Compatibility Tests
+      - run: npx es-check es2020 'dist/**/*.js' 'dist/**/*.mjs'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
+  # ── 3. Unit Tests (Vitest 4.x requires Node 22+) ─────────────────────────────
+  test:
+    name: Unit Tests
+    needs: build
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - run: npm test
+
+  # ── 4. Compatibility (smoke test CLI on every supported Node version) ─────────
+  compatibility:
+    name: Node ${{ matrix.node-version }} Smoke Test
+    needs: test
+    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node-version: [18, 20, 22, 24]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci --omit=dev
-      - run: npm run build
-      - run: node dist/cli.js --help
+
+      - name: Smoke test CLI
+        run: |
+          node dist/cli.js --help
+
+          # --- create-table ---
+          node dist/cli.js create create-table-users id:uuid email:string name:string
+          node dist/cli.js create create-table-orders total:float clientId:ref:clients sessionId:ref:sessions:id:uuid
+
+          # --- add/remove column ---
+          node dist/cli.js create add-phone-to-users string
+          node dist/cli.js create add-is-verified-to-users bool
+          node dist/cli.js create remove-expired-at-from-sessions
+
+          # --- rename / change type ---
+          node dist/cli.js create rename-user-id-to-customer-id-in-orders
+          node dist/cli.js create change-description-in-products text
+
+          # --- index ---
+          node dist/cli.js create add-index-email-to-users
+          node dist/cli.js create remove-index-old-status-from-orders
+
+          # --- drop table ---
+          node dist/cli.js create drop-table-old-sessions

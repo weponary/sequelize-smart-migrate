@@ -4,6 +4,7 @@ export default defineConfig([
   {
     entry: ["src/index.ts"],
     format: ["cjs", "esm"],
+    target: "node18",
     dts: true,
     clean: true,
     outExtension({ format }) {
@@ -13,6 +14,7 @@ export default defineConfig([
   {
     entry: { cli: "src/cli.ts" },
     format: ["cjs"],
+    target: "node18",
     dts: false,
     clean: false,
     banner: { js: "#!/usr/bin/env node" },
